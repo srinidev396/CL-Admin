@@ -2,5 +2,5 @@
 Description:
 License manager is a client application that create new license for customers 
 
-Dependencies:
+Dependencies on repositories:
 MS-LicenseService
