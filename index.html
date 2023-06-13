@@ -27,14 +27,14 @@
         <!---Search bar for Client or Look for existing client-->
        
             <form autocomplete="off">  
-                <div  id="search_client" style="display:none;" class="relative rounded-lg  border border-2 top-32  w-96 shadow px-6 py-6 lg:px-8">
+                <div  id="search_client" style="display: none;"  class="rounded-lg  top-32  w-[825px] px-6 py-6 lg:px-8">
                 <!-- <label for="search_client" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label> -->
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                         <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
-                    <input type="search" id="search_client_input" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500" placeholder="Search existing clients..." required>
-                    <p id="client_search_button" type="sub" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</p>
+                    <input type="search" id="search_client_input" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500" placeholder="Search to add new License for new or existing company" required>
+                    <p id="client_search_button" onclick="generate_license_existing_customer()" type="sub" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</p>
                 </div>
             </div>
             </form>
@@ -221,88 +221,17 @@
 License.clientList_autocomplete(License.search_client_input); 
 
 
-client_search_button.addEventListener("click", (e) =>{
-
-let customer_name = search_client_input.value;
-FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/IsCustomerExist?Customername=${customer_name}`).then((d) => {
-    alert(d.isCustomerFound)
-    if(d.isCustomerFound){ 
-    let customer  = d.customerName;
-    License.existing_client.style.display ="block";
-    License.existing_client.innerHTML ="";
-    License.existing_client.innerHTML +=` <form>
-        <div class="flex flex-row gap-4  w-full mt-4"> 
-            <label for="email" class="mb-4 text-xl font-semibold  font-mono text-gray-900">Create License for ${customer}</label>
-        </div>
-        <div class="grid md:grid-cols-2 md:gap-6">
-            <div class="relative z-0 w-full mb-5">
-                <select value="" id="prodid" name="productName" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                    <option value="0">Select Product</option>
-                </select>
-                <!-- <label for="select" class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Product</label> -->
-               
-              </div>
-        
-              <div class="relative z-0 w-full mb-5">
-                <select value="" id="licensetypeid" name="licenseType" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                    <option>Select Type</option>
-                </select>
-                <!-- <label for="select" class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">LicenseType</label> -->
-              </div>
-        </div>
-        <div class="grid md:grid-cols-2 md:gap-6">
-            <div class="relative z-0 w-full mb-6 group">
-                <input name="licenseCount" type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
-                <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">LicenseCount</label>
-            </div>
-            <div class="relative z-0 w-full mb-6 group">
-                <input  type="datetime-local" name="expiryDate" class="block py-2.5 px-0 w-full text-medium text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                <label for="floating_last_name" class="peer-focus:font-sm absolute text-medium peer-focus:-top-0.5 text-gray-500  duration-100 transform -translate-y-6 scale-75 top-2 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Expiry Date</label>
-            </div>
-        </div>
-        <div class="grid md:grid-cols-2 md:gap-6">
-            <div class="relative z-0 w-full mb-6 group">
-                <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
-                <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Database</label>
-            </div>
-            <div class="relative z-0 w-full mb-6 group">
-                <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
-                <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Comment</label>
-            </div>
-        </div>
-        <div class="grid grid-cols-2 w-40 gap-2">
-            <button type="button" onclick="License.GenerateNewLicense()" value="Execute" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-3 text-center">Execute</button>
-            <button id="close-btn" onclick="License.close_LicenseKeydiv()" value="cancel" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-3 py-3 hover:text-gray-900 focus:z-10">Cancel</button>
-    </div>
-    <div id="key_div" class="grid md:grid-cols-1 md:gap-6 bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-2 invisible mt-4">
-        
-        <p class="font-bold">Your's License Key</p>
-         <p id="Lspid" class="text-sm overflow: auto; break-words"></p>
-        <!-- <p id="Lspid" style="color: blue; overflow: auto;"></p> -->
-   </div>
-         </form>`
-    
-    //   generatelicenseexistingcustomer(customer)
-    
-}
-if(d.isError)
-{
-   alert(d.message)
-}
-
-});
-
-}); 
+License.generate_license_existing_customer(License.client_search_button);
    
 
 
-function generatelicenseexistingcustomer(customer){
-    FETCHPOSTAUTH(`${app.LicenseServiceUrl}LicenseGenerator/GenerateLicenseToExistCustomer`, customer).then((d) => {
-    alert(d.message)
+// function generate_license_existing_customer(customer){
+//     FETCHPOSTAUTH(`${app.LicenseServiceUrl}LicenseGenerator/GenerateLicenseToExistCustomer`, customer).then((d) => {
+//     alert(d.message)
     
-});
+// });
 
-}
+// }
     //var api = "https://license.tabfusionrms.com/";
     // k.addEventListener('click', (e) =>{
     //     document.getElementById("frmlogin").classList.add("invisible");
