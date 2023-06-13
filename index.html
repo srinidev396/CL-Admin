@@ -1,0 +1,442 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="JS/tailwind.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/datepicker.min.js"></script>
+  <script></script>
+
+
+</head>  
+<body class="bg-gray-100">
+  <div class="container mx-auto">
+    <!-- header Fusion logo, connect database buttons-->
+    <nav class="flex items-center justify-between p-4  border-b-2 border-black-300 bg-white">
+       <img src="Images/fusion-logo.png" width="120px" height="120px" alt="Tab Fusion" class="img-responsive"></img>
+        <h1 class="font-bold  font-mono text-2xl text-gray-700">License Manager</h1>
+        <button id="btn_logout" value="logout" onclick="License.Logout_LicenseKeydiv()" class="border-2 border-blue-300 py-2 px-4 rounded-full font-medium hover:border-blue-700 invisible">Logout</button> 
+    </nav>
+    <!--Login for License-->
+
+    
+    <div id="my_div" class="overflow-auto items-center relative flex flex-col h-screen bg-white shadow-md">
+        <!---Error Message for login-->
+         <div id="Lpid" class="bg-red-100  mt-5 border border-red-400 text-red-700 px-4 py-3 rounded invisible" role="alert">
+        </div>
+        <!---Search bar for Client or Look for existing client-->
+       
+            <form autocomplete="off">  
+                <div  id="search_client" style="display:none;" class="relative rounded-lg  border border-2 top-32  w-96 shadow px-6 py-6 lg:px-8">
+                <!-- <label for="search_client" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label> -->
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <input type="search" id="search_client_input" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500" placeholder="Search existing clients..." required>
+                    <p id="client_search_button" type="sub" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</p>
+                </div>
+            </div>
+            </form>
+            
+        
+        <!--Form login-->
+         <div id="frmlogin_div" class="relative rounded-lg mt-4 border border-2 w-2/6 shadow px-6 py-6 lg:px-8">
+                <form id="frmlogin" class="space-y-6" action="">
+                    <div>
+                        <label  class="block mb-2 text-lg font-mono  text-gray-900">User Name:</label>
+                        <input type="text" name="username" placeholder="userName" value="administrator" class="focus:outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    </div>
+                    <div>
+                        <label for="password" class="block mb-2 text-lg font-mono  text-gray-900">Password:</label>
+                        <input type="password"  name="Password" placeholder="Password" value="password$" class="focus:outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block mb-2 text-lg font-mono  text-gray-900">DataBase:</label>
+                        <input type="text" name="database" placeholder="database" value="license" class="focus:outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    </div>
+                   <div class="grid grid-cols-2">
+                    <!-- <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Execute</button> -->
+                     <div>
+                        <button type="button" onclick="License.GetToken()" value="Execute" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Execute</button>
+                        <!-- <button id="close-btn" data-id="1"  value="cancel" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10">Cancel</button> -->
+                    </div>
+                    <!-- <div id="Lpid" class="p-4 break-words text-sm text-center text-red-800 px-2 mb-6 rounded-lg bg-red-50 invisible" role="alert">
+                        <span class="font-medium"></span>
+                     </div> -->
+                    </div>
+                </form>     
+        </div>
+       <!--Generate License-->
+        <div id="liclogin_div" style="display:none;" class="w-6/12 border-2 flex flex-col grow mt-6 bg-white rounded-lg absolute left-68 p-4">
+            <form id="Liclogin">
+                <div class="grid grid-cols-[50%_50%] mb-2">
+                    <h1 class="flex-col items-center text-2xl font-semibold font-mono text-gray-900 ">Generate new License</h1>
+                    <!-- <p id="Spidmsg" class ="invisible bg-red-50 bg-red-50 text-sm text-center px-2 py-2"></p> -->
+                    <p id="Spidmsg" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded invisible" role="alert">
+                    </p>
+                </div>
+                    <!--Company Information-->
+                    <div class="flex flex-row gap-4 border-t border-blue-300 w-full mt-4"> 
+                        <label for="email" class="text-xl font-semibold  mt-4 mb-4 font-mono text-gray-900">Company Information</label>
+                    </div>
+            
+                    <div class="grid md:grid-cols-2 md:gap-6">
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                            <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500  duration-100 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Company Name</label>
+                        </div>
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                            <label for="floating_last_name" class="peer-focus:font-medium absolute text-sm text-gray-500  duration-100 transform -translate-y-6 scale-75 top-3 -z-10 peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Address</label>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 md:gap-6">
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                            <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 duration-100 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">City</label>
+                        </div>
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                            <label for="floating_last_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-100 transform -translate-y-6 scale-75 top-3 -z-10 peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">State</label>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 md:gap-6">
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                            <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Country</label>
+                        </div>
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                            <label for="floating_last_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">ZipCode</label>
+                        </div>
+                    </div>
+            
+                    <!--Contact Information-->
+                    <div class="flex flex-row gap-4  w-full mt-4"> 
+                        <label for="email" class="mb-4 text-xl font-semibold  font-mono text-gray-900">Contact Information</label>
+                    </div>
+                    <div class="grid md:grid-cols-2 md:gap-6">
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                            <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-100 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Title</label>
+                        </div>
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                            <label for="floating_last_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-100 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Phone</label>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 md:gap-6">
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                            <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-100 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">FullName</label>
+                        </div>
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                            <label for="floating_last_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-100 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email</label>
+                        </div>
+                    </div>
+            
+                    <!--License Details-->
+            
+                    <div class="flex flex-row gap-4  w-full mt-4"> 
+                        <label for="email" class="mb-4 text-xl font-semibold  font-mono text-gray-900">License details</label>
+                    </div>
+                    <div class="grid md:grid-cols-2 md:gap-6">
+                        <div class="relative z-0 w-full mb-5">
+                            <select value="" id="prodid" name="productName" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                <option value="0">Select Product</option>
+                            </select>
+                            <!-- <label for="select" class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Product</label> -->
+                           
+                          </div>
+                    
+                          <div class="relative z-0 w-full mb-5">
+                            <select value="" id="licensetypeid" name="licenseType" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                <option>Select Type</option>
+                            </select>
+                            <!-- <label for="select" class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">LicenseType</label> -->
+                          </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 md:gap-6">
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input name="licenseCount" type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                            <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">LicenseCount</label>
+                        </div>
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input  type="datetime-local" name="expiryDate" class="block py-2.5 px-0 w-full text-medium text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                            <label for="floating_last_name" class="peer-focus:font-sm absolute text-medium peer-focus:-top-0.5 text-gray-500  duration-100 transform -translate-y-6 scale-75 top-2 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Expiry Date</label>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 md:gap-6">
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                            <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Database</label>
+                        </div>
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                            <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Comment</label>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 w-40 gap-2">
+                        <button type="button" onclick="License.GenerateNewLicense()" value="Execute" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-3 text-center">Execute</button>
+                        <button id="close-btn" onclick="License.close_LicenseKeydiv()" value="cancel" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-3 py-3 hover:text-gray-900 focus:z-10">Cancel</button>
+                </div>
+                <div id="key_div" class="grid md:grid-cols-1 md:gap-6 bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-2 invisible mt-4">
+                    
+                    <p class="font-bold">Your's License Key</p>
+                     <p id="Lspid" class="text-sm overflow: auto; break-words"></p>
+                    <!-- <p id="Lspid" style="color: blue; overflow: auto;"></p> -->
+               </div>
+            </form>
+        </div>
+   <!--Existing  client with License details-->
+      <div id="existing_client" style="display:none;" class="w-6/12 border-2 flex flex-col grow mt-6 bg-white rounded-lg absolute left-68 p-4" >
+    
+      </div>
+      
+    </div>
+   
+    </div>
+
+</body>
+</html>
+<script src="js/Networking.js"></script>
+<script src="js/Licenseclientfunction.js"></script>
+<script>
+    var api = "http://localhost:5001/";
+    License = new Licensefuncs();
+    License.prodid.addEventListener("change", (e) => {
+        var id = parseInt(e.currentTarget.value)
+        FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/GetListOfLicenseTypes?prodId=${id}`).then((d) => {
+            document.getElementById("licensetypeid").innerHTML = ""
+            document.getElementById("licensetypeid").innerHTML = `<option>Select Type</option>`
+            d.forEach(e => {
+                document.getElementById("licensetypeid").innerHTML += `<option value="${e.enumId}">${e.name}</option>`
+            });
+        })
+    })
+    
+
+License.clientList_autocomplete(License.search_client_input); 
+
+
+client_search_button.addEventListener("click", (e) =>{
+
+let customer_name = search_client_input.value;
+FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/IsCustomerExist?Customername=${customer_name}`).then((d) => {
+    alert(d.isCustomerFound)
+    if(d.isCustomerFound){ 
+    let customer  = d.customerName;
+    License.existing_client.style.display ="block";
+    License.existing_client.innerHTML ="";
+    License.existing_client.innerHTML +=` <form>
+        <div class="flex flex-row gap-4  w-full mt-4"> 
+            <label for="email" class="mb-4 text-xl font-semibold  font-mono text-gray-900">Create License for ${customer}</label>
+        </div>
+        <div class="grid md:grid-cols-2 md:gap-6">
+            <div class="relative z-0 w-full mb-5">
+                <select value="" id="prodid" name="productName" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <option value="0">Select Product</option>
+                </select>
+                <!-- <label for="select" class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Product</label> -->
+               
+              </div>
+        
+              <div class="relative z-0 w-full mb-5">
+                <select value="" id="licensetypeid" name="licenseType" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <option>Select Type</option>
+                </select>
+                <!-- <label for="select" class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">LicenseType</label> -->
+              </div>
+        </div>
+        <div class="grid md:grid-cols-2 md:gap-6">
+            <div class="relative z-0 w-full mb-6 group">
+                <input name="licenseCount" type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">LicenseCount</label>
+            </div>
+            <div class="relative z-0 w-full mb-6 group">
+                <input  type="datetime-local" name="expiryDate" class="block py-2.5 px-0 w-full text-medium text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                <label for="floating_last_name" class="peer-focus:font-sm absolute text-medium peer-focus:-top-0.5 text-gray-500  duration-100 transform -translate-y-6 scale-75 top-2 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Expiry Date</label>
+            </div>
+        </div>
+        <div class="grid md:grid-cols-2 md:gap-6">
+            <div class="relative z-0 w-full mb-6 group">
+                <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Database</label>
+            </div>
+            <div class="relative z-0 w-full mb-6 group">
+                <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Comment</label>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 w-40 gap-2">
+            <button type="button" onclick="License.GenerateNewLicense()" value="Execute" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-3 text-center">Execute</button>
+            <button id="close-btn" onclick="License.close_LicenseKeydiv()" value="cancel" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-3 py-3 hover:text-gray-900 focus:z-10">Cancel</button>
+    </div>
+    <div id="key_div" class="grid md:grid-cols-1 md:gap-6 bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-2 invisible mt-4">
+        
+        <p class="font-bold">Your's License Key</p>
+         <p id="Lspid" class="text-sm overflow: auto; break-words"></p>
+        <!-- <p id="Lspid" style="color: blue; overflow: auto;"></p> -->
+   </div>
+         </form>`
+    
+    //   generatelicenseexistingcustomer(customer)
+    
+}
+if(d.isError)
+{
+   alert(d.message)
+}
+
+});
+
+}); 
+   
+
+
+function generatelicenseexistingcustomer(customer){
+    FETCHPOSTAUTH(`${app.LicenseServiceUrl}LicenseGenerator/GenerateLicenseToExistCustomer`, customer).then((d) => {
+    alert(d.message)
+    
+});
+
+}
+    //var api = "https://license.tabfusionrms.com/";
+    // k.addEventListener('click', (e) =>{
+    //     document.getElementById("frmlogin").classList.add("invisible");
+    //     document.getElementById("generate_license").classList.remove("invisible");
+
+    // } );
+    // function GetToken() {
+    //     document.getElementById("frmlogin_div").classList.add("invisible");
+    //     document.getElementById("liclogin_div").classList.remove("invisible");
+    //     var prop = document.getElementById("frmlogin");
+    //     var url = `${api}GenerateToken?`;
+    //     var userName = prop[0].value;
+    //     var password = prop[1].value;
+    //     var database = prop[2].value;
+    //     var sendurl = `${url}userName=${userName}&passWord=${password}&database=${database}`
+    //     FETCHGET(sendurl, "html").then((data) => {
+    //         document.getElementById("Lpid").innerHTML = data;
+    //         sessionStorage.setItem("token", data);
+    //         FETCHGETAUTH(`${api}LicenseGenerator/GetListOfProducts`).then((d) => {
+    //             document.getElementById("prodid").innerHTML = ""
+    //             document.getElementById("prodid").innerHTML = `<option value="0">Select Product</option>`
+    //             d.forEach(e => {
+    //                 document.getElementById("prodid").innerHTML += `<option value="${e.id}">${e.name}</option>`
+    //             });
+    //         })
+    //     }).catch((err => {
+    //         document.getElementById("Lpid").classList.remove("invisible");
+    //         document.getElementById("Lpid").value = err;
+    //         document.getElementById("Lpid").style.color = 'red';
+    //     }))
+    // }
+    // function GenerateNewLicense() {
+    //     var prop = document.getElementById("Liclogin");
+    //     var model = {};
+    //     model.companyName = prop[0].value;
+    //     model.address = prop[1].value;
+    //     model.city = prop[2].value;
+    //     model.stateProvice = prop[3].value;
+    //     model.country = prop[4].value;
+    //     model.zipCode = prop[5].value;
+    //     model.contactTitle = prop[6].value;
+    //     model.contactPhone = prop[7].value;
+    //     model.contactFullName = prop[8].value;
+    //     model.contactEmail = prop[9].value;
+    //     model.ProductId = prop[10].value;
+    //     model.LicenseTypeEnumid = prop[11].value;
+    //     model.licenseCount = prop[12].value;
+    //     model.expiryDate = prop[13].value;
+    //     model.database = prop[14].value;
+    //     model.comment = prop[15].value;
+
+    //     var url = `${api}LicenseGenerator/GenerateLicense`
+    //     FETCHPOSTRETURNSTRING(url, model).then((key) => {
+    //         if (key.ok == false) {
+    //             errorMessages(document.getElementById("Lspid"), key.status);
+    //             return;
+    //         }
+            
+    //         document.getElementById("Lspid").innerHTML =  `<p>${key}</p>`;
+    //         document.getElementById("Lspid").style.color = 'blue'
+    //     }).catch((err) => {
+    //         document.getElementById("Lspid").innerHTML = err;
+    //         document.getElementById("Lspid").style.color = 'red'
+    //     });
+    // }
+
+    // function ValidateLicense() {
+    //     var data = {};
+    //     var prop = document.getElementById("frmslim");
+    //     data.Database = prop[0].value;
+    //     data.SqlServer = prop[1].value;
+    //     data.LicenseKey = prop[2].value;
+    //     data.ActiveCount = parseInt(prop[3].value);
+    //     var url = `${api}LicenseGenerator/LicenseValidation`;
+    //     FETCHPOSTAUTH(url, data).then((d) => {
+    //         if (d.ok == false) {
+    //             errorMessages(document.getElementById("Spidmsg"), d.status);
+    //             return;
+    //         }
+    //         if (d.valid) {
+    //             var dateFormat = new Date(d.expiryDate);
+    //             document.getElementsByName("rvalid")[0].innerHTML = d.companyName;
+    //             // document.getElementsByName("rvalid")[1].innerHTML = d.licenseType;
+    //             document.getElementsByName("rvalid")[1].innerHTML = d.sqlServer;
+    //             document.getElementsByName("rvalid")[2].innerHTML = d.database;
+    //             document.getElementsByName("rvalid")[3].innerHTML = d.licenseKey;
+    //             document.getElementsByName("rvalid")[4].innerHTML = dateFormat;
+    //             document.getElementsByName("rvalid")[5].innerHTML = d.licenseCount;
+    //             document.getElementsByName("rvalid")[6].innerHTML = d.productName;
+
+    //             document.getElementsByName("rvalid")[7].innerHTML = d.licenseType;
+    //             document.getElementsByName("rvalid")[8].innerHTML = d.features.fLabelBlackwhite;
+    //             document.getElementsByName("rvalid")[9].innerHTML = d.features.fTabQuick;
+    //             document.getElementsByName("rvalid")[10].innerHTML = d.features.fTransfer;
+    //             document.getElementsByName("rvalid")[11].innerHTML = d.features.fRequest;
+    //             document.getElementsByName("rvalid")[12].innerHTML = d.features.fAttachment;
+    //             document.getElementsByName("rvalid")[13].innerHTML = d.features.fRetention;
+    //             document.getElementsByName("rvalid")[14].innerHTML = d.features.fDashboard;
+
+    //             document.getElementById("Spidmsg").innerHTML = `${d.message}`
+    //             document.getElementById("Spidmsg").style.color = "green";
+    //         } else {
+    //             document.getElementById("Spidmsg").innerHTML = d.message;
+    //             document.getElementById("Spidmsg").style.color = "red";
+    //         }
+
+    //     }).catch((err, xer, xxr) => {
+    //         document.getElementById("Spidmsg").innerHTML = err;
+    //         document.getElementById("Spidmsg").style.color = "red";
+    //     });
+    // }
+
+    //events
+    
+    // var counter = 1;
+    // function Fillupform() {
+    //     var num = counter++;
+    //     var prop = document.getElementById("Liclogin");
+    //     var model = {};
+    //     prop[0].value = `companyName${num}`;
+    //     prop[1].value = `address${num}`;
+    //     prop[2].value = `city${num}`;
+    //     prop[3].value = `state${num}`;
+    //     prop[4].value = `country${num}`
+    //     prop[5].value = `zipcode${num}`
+    //     prop[6].value = `manager${num}`
+    //     prop[7].value = `55544433${num}`
+    //     prop[8].value = `name${num}`
+    //     prop[9].value = `test${num}@email.com`
+    //     prop[12].value = 10
+    //     prop[13].value = "2024-03-29T21:24";
+    //     prop[14].value = `database${num}`
+    //     prop[15].value = `comment${num}`
+    // }
+
+
+</script>
