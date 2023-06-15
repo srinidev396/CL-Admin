@@ -136,7 +136,6 @@ close_LicenseKeydiv()
     License.formlogin_div.style.display = "block"; 
     // License.formlogin_div.classList.add("visible"); 
 }
-
 Logout_LicenseKeydiv()
 {
     sessionStorage.removeItem("token");
