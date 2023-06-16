@@ -23,10 +23,17 @@ constructor(){
    this.exLspid = document.getElementById("exLspid");
    this.exkey_div= document.getElementById("exkey_div");
    this.exSpidmsg = document.getElementById("exSpidmsg");
+   this.existing_licenseCount = document.getElementById("existing_licenseCount");
+   this.existing_expiryDate_id = document.getElementById("existing_expiryDate_id");
+   this.existing_newdatabaseid = document.getElementById("existing_newdatabaseid");
+   this.existing_comments_id = document.getElementById(" existing_comments_id");
+   this.existing_licenseCountid = document.getElementById("existing_licenseCountid");
+   this.newlicense_id = document.getElementById('newlicense_id');
 }
 
 GetToken() {
     License.lpid.classList.add("invisible");
+    License.search_client_input.value = "";
     License.btn_logout.classList.remove("invisible");
     var prop = document.getElementById("frmlogin");
     var url = `${app.LicenseServiceUrl}GenerateToken?`;
@@ -42,7 +49,6 @@ GetToken() {
         License.lpid.innerHTML = "Id or Password is not correct.";
         License.lpid.style.color = 'red';
         return;
-       
       }
         License.search_client.style.display ="block";
         License.formlogin_div.style.display = "none";
@@ -50,6 +56,7 @@ GetToken() {
         // License.search_client.classList.remove("invisible");
         sessionStorage.setItem("token", data);
         FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/GetListOfProducts`).then((d) => {
+           
             License.existing_prodid.innerHTML = ""
             License.existing_prodid.innerHTML = `<option value="0">Select Product</option>`
             License.prodid.innerHTML = ""
@@ -60,7 +67,6 @@ GetToken() {
             });
         })
     }).catch((err => {
-        debugger
         License.lpid.classList.remove("invisible");
         License.lpid.innerHTML = err;
         License.lpid.style.color = 'red';
@@ -72,7 +78,6 @@ GetToken() {
 // CLear everything
 // destroy token when we logout
 // Duplicate,  Same name does not exit.  ( IsCustomerExit, Duplicate)
-
 
 GenerateNewLicense() {
     License.Spidmsg.classList.add("invisible");
@@ -205,22 +210,24 @@ clientList_autocomplete(inp){
 
            }
           
-          
         }
         else{
-            alert("Company Name is not found!")
+            // License.lpid.classList.remove("invisible");
+            // License.lpid.innerHTML = "Company Name is not found!.";
+            // License.lpid.style.color = 'red';
             // Send users for to create License
+            License.lpid.classList.add("invisible");
+            License.newlicense_id.innerText = License.search_client_input.value;
             License.search_client.style.display = "none";
             License.liclogin_div.style.display = "block"; 
-
         }
         
     }).catch((err => {
         alert(err)
         // debugger
-        // License.lpid.classList.remove("invisible");
-        // License.lpid.innerHTML = err;
-        // License.lpid.style.color = 'red';
+        License.lpid.classList.remove("invisible");
+        License.lpid.innerHTML = err;
+        License.lpid.style.color = 'red';
     }))
   }     
      /*execute a function presses a key on the keyboard:*/
@@ -251,9 +258,9 @@ clientList_autocomplete(inp){
   });
   
   /*execute a function when someone clicks in the document:*/
-  // document.addEventListener("click", function (e) {
-  //    License.closeAllLists(e.target);
-  // });
+  //  document.addEventListener("click", function (e) {
+  //     License.closeAllLists(e.target);
+  //  });
 
 
 })    
@@ -286,14 +293,26 @@ closeAllLists(elmnt) {
       x[i].parentNode.removeChild(x[i]);
     }
   }
+  License.existing_client.style.display = "none";
 }
 
 verify_existing_customer()
 {
-
+  // alert(License.search_client_input.value);
+  // License.newlicense_id.innerHTML = License.search_client_input.value;
+  License.lpid.classList.add("invisible");
   License.client_search_button.addEventListener("click", (e) =>{
+  
     License.client_search_button.display ="block";
-    let customer_name = search_client_input.value.trim();
+    let customer_name = License.search_client_input.value.trim();
+    if(customer_name == "" || customer_name == null)
+    {
+
+      License.lpid.classList.remove("invisible");
+      License.lpid.innerHTML = "Please enter company name.";
+      License.lpid.style.color = 'red';
+      return;
+    }
     FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/IsCustomerExist?Customername=${customer_name}`).then((d) => {
         if(d.isCustomerFound){ 
         let customer  = d.customerName;
@@ -303,23 +322,24 @@ verify_existing_customer()
         // License.customer_name.innerHTML  = customer;
         License.customer_name.innerHTML ='License generated for' +" "+customer;
         License.existing_client.style.display = "block";
-        // License.existing_client.innerHTML +=` `
-        
-        //   generatelicenseexistingcustomer(customer)
 
-        // License.generate_new_license_existingcompany(customer_name)
         
     }
     if(d.isError)
     {
+      
+      License.lpid.classList.remove("invisible");
+      License.lpid.innerHTML = d.message;
+      License.lpid.style.color = 'red';
+      return;
 
-       alert(d.message)
     }
     
     });
-    
+  
     }); 
-
+  
+    // License.search_client_input.value = '';
 }
 
 //
@@ -327,6 +347,7 @@ verify_existing_customer()
 generate_new_license_existingcompany()
 {
   var companyname = License.search_client_input.value.trim();
+ 
   var prop  = License.existing_customer_div;
   var model = {};
   // model.companyName = companyname;
@@ -389,22 +410,33 @@ generate_new_license_existingcompany()
     if(key.isError == true){ 
       License.exSpidmsg.classList.remove("invisible");
       License.exSpidmsg.innerHTML =  key.message;
-    License.clear_LicenseInfo(prop);
+      License.clear_existingLicenseinfo();
+     return ;
     // document.getElementById("Lspid").style.color = 'blue'
   }
   if (key.isCustomerFound == false)
   {
     License.exkey_div.classList.remove("invisible");
     License.exLspid.innerHTML =  `<p>${key.message}</p>`;
-    License.clear_LicenseInfo(prop);
+    License.clear_existingLicenseinfo();
   }
 }).catch((err) => {
     License.exSpidmsg.classList.remove("invisible");
     License.exSpidmsg.innerHTML = err;
-    License.clear_LicenseInfo(prop);
+    License.clear_existingLicenseinfo();
 });
 }
 
+clear_existingLicenseinfo()
+{
+  License.existing_prodid.value = '';
+  License.existing_licensetypeid.value = '';
+  License.existing_expiryDate_id.value = '';
+  License.existing_newdatabaseid.value = '';
+  License.existing_comments_id.value = '';
+  License.existing_licenseCountid.value = '';
+
+}
 // getproduct_fornewcustomer()
 // {
 //     License.lpid.addEventListener("change", (e) => {
