@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="JS/tailwind.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/datepicker.min.js"></script>
+
   <script></script>
 
 
@@ -34,7 +34,7 @@
                         <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
                     <input type="search" id="search_client_input" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500" placeholder="Search to add new License for new or existing company" required>
-                    <p id="client_search_button" onclick="generate_license_existing_customer()" type="sub" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</p>
+                    <p id="client_search_button" onclick="License.verify_existing_customer()" type="submit" class="cursor-pointer text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</p>
                 </div>
             </div>
             </form>
@@ -83,7 +83,7 @@
             
                     <div class="grid md:grid-cols-2 md:gap-6">
                         <div class="relative z-0 w-full mb-6 group">
-                            <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                            <p id="newlicense_id" type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required=""></p>
                             <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500  duration-100 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Company Name</label>
                         </div>
                         <div class="relative z-0 w-full mb-6 group">
@@ -144,7 +144,7 @@
                     </div>
                     <div class="grid md:grid-cols-2 md:gap-6">
                         <div class="relative z-0 w-full mb-5">
-                            <select value="" id="prodid" name="productName" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                            <select  id="prodid" name="productName" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                                 <option value="0">Select Product</option>
                             </select>
                             <!-- <label for="select" class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Product</label> -->
@@ -192,7 +192,58 @@
         </div>
    <!--Existing  client with License details-->
       <div id="existing_client" style="display:none;" class="w-6/12 border-2 flex flex-col grow mt-6 bg-white rounded-lg absolute left-68 p-4" >
-    
+        <form id="existing_customer_div">
+            <div class="grid grid-cols-[70%_30%]  gap-4  w-full mt-4"> 
+                <label id="customer_name" for="email" class="mb-4 text-xl font-semibold  font-mono text-gray-900"></label>
+                <p id="exSpidmsg" class="bg-red-100 text-sm border mr-4 text-red-700 px-2.5 py-2.5 rounded invisible" role="alert"></p>
+            </div>
+            <div class="grid md:grid-cols-2 md:gap-6">
+                <div class="relative z-0 w-full mb-5">
+                    <select value=""  id="existing_prodid" name="productName" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                        <option value="0">Select Product</option>
+                    </select>
+                    <!-- <label for="select" class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Product</label> -->
+                   
+                  </div>
+            
+                  <div class="relative z-0 w-full mb-5">
+                    <select value=""  id="existing_licensetypeid" name="licenseType" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                        <option>Select Type</option>
+                    </select>
+                    <!-- <label for="select" class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">LicenseType</label> -->
+                  </div>
+            </div>
+            <div class="grid md:grid-cols-2 md:gap-6">
+                <div class="relative z-0 w-full mb-6 group">
+                    <input id="existing_licenseCountid" name="existing_licenseCount" type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                    <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">LicenseCount</label>
+                </div>
+                <div class="relative z-0 w-full mb-6 group">
+                    <input id="existing_expiryDate_id" type="datetime-local" name="existing_expiryDate" class="block py-2.5 px-0 w-full text-medium text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <label for="floating_last_name" class="peer-focus:font-sm absolute text-medium peer-focus:-top-0.5 text-gray-500  duration-100 transform -translate-y-6 scale-75 top-2 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Expiry Date</label>
+                </div>
+            </div>
+            <div class="grid md:grid-cols-2 md:gap-6">
+                <div class="relative z-0 w-full mb-6 group">
+                    <input id="existing_newdatabaseid" type="text" name="existing_newdatabase" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                    <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Database</label>
+                </div>
+                <div class="relative z-0 w-full mb-6 group">
+                    <input id ="existing_comments_id" type="text" name="existing_comments" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
+                    <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Comment</label>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 w-40 gap-2">
+                <p type="button" onclick="License.generate_new_license_existingcompany()" value="Execute" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-3 text-center">Execute</p>
+                <button id="close-btn" onclick="License.close_customerinfodiv()" value="cancel" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-3 py-3 hover:text-gray-900 focus:z-10">Cancel</button>
+        </div>
+        <div id="exkey_div" class="grid md:grid-cols-1 md:gap-6 bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-2 invisible mt-4">
+            
+            <p class="font-bold">Your's License Key</p>
+             <p id="exLspid" class="text-sm overflow: auto; break-words"></p>
+            <!-- <p id="Lspid" style="color: blue; overflow: auto;"></p> -->
+       </div>
+             </form>
       </div>
       
     </div>
@@ -204,24 +255,40 @@
 <script src="js/Networking.js"></script>
 <script src="js/Licenseclientfunction.js"></script>
 <script>
-    var api = "http://localhost:5001/";
-    License = new Licensefuncs();
-    License.prodid.addEventListener("change", (e) => {
+var api = "http://localhost:5001/";
+License = new Licensefuncs();
+
+// 
+
+
+License.prodid.addEventListener("change", (e) => {
         var id = parseInt(e.currentTarget.value)
         FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/GetListOfLicenseTypes?prodId=${id}`).then((d) => {
-            document.getElementById("licensetypeid").innerHTML = ""
-            document.getElementById("licensetypeid").innerHTML = `<option>Select Type</option>`
+          License.licensetypeid.innerHTML = ""
+          License.licensetypeid.innerHTML = `<option>Select Type</option>`
             d.forEach(e => {
-                document.getElementById("licensetypeid").innerHTML += `<option value="${e.enumId}">${e.name}</option>`
+                License.licensetypeid.innerHTML += `<option value="${e.enumId}">${e.name}</option>`  //id2
             });
         })
-    })
+})
+   
     
+
+License.existing_prodid.addEventListener("change", (e) => {
+    var id = parseInt(e.currentTarget.value)
+    FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/GetListOfLicenseTypes?prodId=${id}`).then((d) => {
+      License.existing_licensetypeid.innerHTML = ""
+        License.existing_licensetypeid.innerHTML = `<option>Select Type</option>`
+        d.forEach(e => {
+            License.existing_licensetypeid.innerHTML += `<option value="${e.enumId}">${e.name}</option>`  //id2
+        });
+    })
+})
 
 License.clientList_autocomplete(License.search_client_input); 
 
 
-License.generate_license_existing_customer(License.client_search_button);
+// License.verify_existing_customer(License.client_search_button);
    
 
 

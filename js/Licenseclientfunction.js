@@ -3,7 +3,10 @@ constructor(){
    this.formlogin_div = document.getElementById("frmlogin_div");
    this.liclogin_div = document.getElementById("liclogin_div");
    this.lpid =  document.getElementById("Lpid");
+   this.licensetypeid = document.getElementById("licensetypeid");
    this.Spidmsg =  document.getElementById("Spidmsg");
+   this.existing_prodid =  document.getElementById("existing_prodid");
+   this.existing_licensetypeid =  document.getElementById("existing_licensetypeid");
    this.prodid = document.getElementById("prodid");
    this.key_div = document.getElementById("key_div");
    this.lspid = document.getElementById("Lspid");
@@ -14,13 +17,23 @@ constructor(){
    this.search_client_input = document.getElementById("search_client_input");
    this.client_search_button = document.getElementById("client_search_button");
    this.existing_client = document.getElementById("existing_client");
-   this.search_client_p = document.getElementById(" search_client_p");
-  
-   
+   this.search_client_p = document.getElementById("search_client_p");
+   this.customer_name = document.getElementById("customer_name");
+   this.existing_customer_div =  document.getElementById("existing_customer_div");
+   this.exLspid = document.getElementById("exLspid");
+   this.exkey_div= document.getElementById("exkey_div");
+   this.exSpidmsg = document.getElementById("exSpidmsg");
+   this.existing_licenseCount = document.getElementById("existing_licenseCount");
+   this.existing_expiryDate_id = document.getElementById("existing_expiryDate_id");
+   this.existing_newdatabaseid = document.getElementById("existing_newdatabaseid");
+   this.existing_comments_id = document.getElementById(" existing_comments_id");
+   this.existing_licenseCountid = document.getElementById("existing_licenseCountid");
+   this.newlicense_id = document.getElementById('newlicense_id');
 }
 
 GetToken() {
     License.lpid.classList.add("invisible");
+    License.search_client_input.value = "";
     License.btn_logout.classList.remove("invisible");
     var prop = document.getElementById("frmlogin");
     var url = `${app.LicenseServiceUrl}GenerateToken?`;
@@ -36,7 +49,6 @@ GetToken() {
         License.lpid.innerHTML = "Id or Password is not correct.";
         License.lpid.style.color = 'red';
         return;
-       
       }
         License.search_client.style.display ="block";
         License.formlogin_div.style.display = "none";
@@ -44,14 +56,17 @@ GetToken() {
         // License.search_client.classList.remove("invisible");
         sessionStorage.setItem("token", data);
         FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/GetListOfProducts`).then((d) => {
+           
+            License.existing_prodid.innerHTML = ""
+            License.existing_prodid.innerHTML = `<option value="0">Select Product</option>`
             License.prodid.innerHTML = ""
             License.prodid.innerHTML = `<option value="0">Select Product</option>`
             d.forEach(e => {
+                License.existing_prodid.innerHTML += `<option value="${e.id}">${e.name}</option>`
                 License.prodid.innerHTML += `<option value="${e.id}">${e.name}</option>`
             });
         })
     }).catch((err => {
-        debugger
         License.lpid.classList.remove("invisible");
         License.lpid.innerHTML = err;
         License.lpid.style.color = 'red';
@@ -63,7 +78,6 @@ GetToken() {
 // CLear everything
 // destroy token when we logout
 // Duplicate,  Same name does not exit.  ( IsCustomerExit, Duplicate)
-
 
 GenerateNewLicense() {
     License.Spidmsg.classList.add("invisible");
@@ -85,7 +99,6 @@ GenerateNewLicense() {
     model.expiryDate = prop[13].value;
     model.database = prop[14].value;
     model.comment = prop[15].value;
-
     var url = `${app.LicenseServiceUrl}LicenseGenerator/GenerateLicense`
     FETCHPOSTRETURNSTRING(url, model).then((key) => {
         if (key.ok == false) {
@@ -121,13 +134,13 @@ close_customerinfodiv()
 
 close_LicenseKeydiv()
 {  
-    sessionStorage.removeItem("token");
+    // sessionStorage.removeItem("token");
+    // License.clear_LicenseInfo(prop);
     License.Spidmsg.classList.add("invisible"); 
     License.liclogin_div.style.display ="none";
     License.formlogin_div.style.display = "block"; 
     // License.formlogin_div.classList.add("visible"); 
 }
-
 Logout_LicenseKeydiv()
 {
     sessionStorage.removeItem("token");
@@ -197,22 +210,24 @@ clientList_autocomplete(inp){
 
            }
           
-          
         }
         else{
-            alert("Company Name is not found!")
+            // License.lpid.classList.remove("invisible");
+            // License.lpid.innerHTML = "Company Name is not found!.";
+            // License.lpid.style.color = 'red';
             // Send users for to create License
+            License.lpid.classList.add("invisible");
+            License.newlicense_id.innerText = License.search_client_input.value;
             License.search_client.style.display = "none";
             License.liclogin_div.style.display = "block"; 
-
         }
         
     }).catch((err => {
         alert(err)
         // debugger
-        // License.lpid.classList.remove("invisible");
-        // License.lpid.innerHTML = err;
-        // License.lpid.style.color = 'red';
+        License.lpid.classList.remove("invisible");
+        License.lpid.innerHTML = err;
+        License.lpid.style.color = 'red';
     }))
   }     
      /*execute a function presses a key on the keyboard:*/
@@ -243,9 +258,9 @@ clientList_autocomplete(inp){
   });
   
   /*execute a function when someone clicks in the document:*/
-  document.addEventListener("click", function (e) {
-     License.closeAllLists(e.target);
-  });
+  //  document.addEventListener("click", function (e) {
+  //     License.closeAllLists(e.target);
+  //  });
 
 
 })    
@@ -278,91 +293,170 @@ closeAllLists(elmnt) {
       x[i].parentNode.removeChild(x[i]);
     }
   }
+  License.existing_client.style.display = "none";
 }
 
-generate_license_existing_customer(inp)
+verify_existing_customer()
 {
-
-  inp.addEventListener("click", (e) =>{
+  // alert(License.search_client_input.value);
+  // License.newlicense_id.innerHTML = License.search_client_input.value;
+  License.lpid.classList.add("invisible");
+  License.client_search_button.addEventListener("click", (e) =>{
+  
     License.client_search_button.display ="block";
-    let customer_name = search_client_input.value.trim();
+    let customer_name = License.search_client_input.value.trim();
+    if(customer_name == "" || customer_name == null)
+    {
+
+      License.lpid.classList.remove("invisible");
+      License.lpid.innerHTML = "Please enter company name.";
+      License.lpid.style.color = 'red';
+      return;
+    }
     FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/IsCustomerExist?Customername=${customer_name}`).then((d) => {
         if(d.isCustomerFound){ 
         let customer  = d.customerName;
-        License.existing_client.style.display ="block";
+        // License.existing_client.style.display ="block";
         License.existing_client.style.top ="130px";
-        License.existing_client.innerHTML ="";
-        License.existing_client.innerHTML +=` <form>
-            <div class="flex flex-row gap-4  w-full mt-4"> 
-                <label for="email" class="mb-4 text-xl font-semibold  font-mono text-gray-900">Create License for ${customer}</label>
-            </div>
-            <div class="grid md:grid-cols-2 md:gap-6">
-                <div class="relative z-0 w-full mb-5">
-                    <select value="" id="prodid" name="productName" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                        <option value="0">Select Product</option>
-                    </select>
-                    <!-- <label for="select" class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Product</label> -->
-                   
-                  </div>
-            
-                  <div class="relative z-0 w-full mb-5">
-                    <select value="" id="licensetypeid" name="licenseType" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                        <option>Select Type</option>
-                    </select>
-                    <!-- <label for="select" class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">LicenseType</label> -->
-                  </div>
-            </div>
-            <div class="grid md:grid-cols-2 md:gap-6">
-                <div class="relative z-0 w-full mb-6 group">
-                    <input name="licenseCount" type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
-                    <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">LicenseCount</label>
-                </div>
-                <div class="relative z-0 w-full mb-6 group">
-                    <input  type="datetime-local" name="expiryDate" class="block py-2.5 px-0 w-full text-medium text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                    <label for="floating_last_name" class="peer-focus:font-sm absolute text-medium peer-focus:-top-0.5 text-gray-500  duration-100 transform -translate-y-6 scale-75 top-2 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Expiry Date</label>
-                </div>
-            </div>
-            <div class="grid md:grid-cols-2 md:gap-6">
-                <div class="relative z-0 w-full mb-6 group">
-                    <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
-                    <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Database</label>
-                </div>
-                <div class="relative z-0 w-full mb-6 group">
-                    <input type="text" name="newlicense" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="">
-                    <label class="peer-focus:font-medium absolute text-sm font-mono  text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Comment</label>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 w-40 gap-2">
-                <button type="button" onclick="License.GenerateNewLicense()" value="Execute" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-3 text-center">Execute</button>
-                <button id="close-btn" onclick="License.close_customerinfodiv()" value="cancel" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-3 py-3 hover:text-gray-900 focus:z-10">Cancel</button>
-        </div>
-        <div id="key_div" class="grid md:grid-cols-1 md:gap-6 bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-2 invisible mt-4">
-            
-            <p class="font-bold">Your's License Key</p>
-             <p id="Lspid" class="text-sm overflow: auto; break-words"></p>
-            <!-- <p id="Lspid" style="color: blue; overflow: auto;"></p> -->
-       </div>
-             </form>`
         
-        //   generatelicenseexistingcustomer(customer)
+        // License.customer_name.innerHTML  = customer;
+        License.customer_name.innerHTML ='License generated for' +" "+customer;
+        License.existing_client.style.display = "block";
+
         
     }
     if(d.isError)
     {
+      
+      License.lpid.classList.remove("invisible");
+      License.lpid.innerHTML = d.message;
+      License.lpid.style.color = 'red';
+      return;
 
-       alert(d.message)
     }
     
     });
-    
+  
     }); 
-
+  
+    // License.search_client_input.value = '';
 }
 
 //
 
+generate_new_license_existingcompany()
+{
+  var companyname = License.search_client_input.value.trim();
+ 
+  var prop  = License.existing_customer_div;
+  var model = {};
+  // model.companyName = companyname;
+  model.address = 'myaddress';
+  model.city = 'city';
+  model.stateProvice = 'myprovince';
+  model.country = 'country';
+  model.zipCode = '60100';
+  model.contactTitle = 'contactTitle';
+  model.contactPhone = '7894565';
+  model.contactFullName = 'ycontact';
+  model.contactEmail = 'my@gmail.com';
+  model.productName = 'TABFUSIONRMS';
+  model.licenseType = 'ESSENTIAL'
+ 
+  
+  // model.licenseCount =prop[2].value;
+  // model.expiryDate =  prop[3].value;
+  // model.database =  'License';
+  // model.comment = 'comments';
+  // model.address = 'myaddress';
+  // model.city = "mycity";
+  // model.stateProvice = "myprovince";
+  // model.country = "myprovince";
+  // model.zipCode = "myprovince";
+  // model.contactTitle = "myprovince";
+  // model.contactPhone = "myprovince";
+  // model.contactFullName = "myprovince";
+  // model.contactEmail = "myprovince@gmail.com";
+  // // model.companyName = "company Name";
+  // // model.ProductId = 11;
+  // model.LicenseTypeEnumid = 100;
+  // model.licenseCount = 10;
+  // model.expiryDate = "2024-03-29 21:24:00.000";
+  // model.database =  "License";
+  // model.comment =  "mycomments";
+  model.companyName = companyname;
+  model.ProductId = prop[0].value;
+  model.LicenseTypeEnumid = prop[1].value;
+  model.licenseCount = prop[2].value;
+  model.expiryDate =  prop[3].value;
+  model.database =  prop[4].value;
+  model.comment =  prop[5].value;
+  var url = `${app.LicenseServiceUrl}LicenseGenerator/GenerateLicenseToExistCustomer`
+  FETCHPOSTAUTH(url, model).then((key) => {
+    if (key.ok == false) {
+        License.exSpidmsg.classList.remove("invisible");
+        errorMessages(License.exSpidmsg, key.status);
+        if(key.status == 401)
+        {
+          // License.Logout_LicenseKeydiv();
+          License.exSpidmsg.classList.remove("invisible");
+          License.exSpidmsg.style.color = 'red';
+          errorMessages(License.exSpidmsg, key.status);
+        
+        }
+       
+        return;
+    }
+    if(key.isError == true){ 
+      License.exSpidmsg.classList.remove("invisible");
+      License.exSpidmsg.innerHTML =  key.message;
+      License.clear_existingLicenseinfo();
+     return ;
+    // document.getElementById("Lspid").style.color = 'blue'
+  }
+  if (key.isCustomerFound == false)
+  {
+    License.exkey_div.classList.remove("invisible");
+    License.exLspid.innerHTML =  `<p>${key.message}</p>`;
+    License.clear_existingLicenseinfo();
+  }
+}).catch((err) => {
+    License.exSpidmsg.classList.remove("invisible");
+    License.exSpidmsg.innerHTML = err;
+    License.clear_existingLicenseinfo();
+});
+}
+
+clear_existingLicenseinfo()
+{
+  License.existing_prodid.value = '';
+  License.existing_licensetypeid.value = '';
+  License.existing_expiryDate_id.value = '';
+  License.existing_newdatabaseid.value = '';
+  License.existing_comments_id.value = '';
+  License.existing_licenseCountid.value = '';
 
 }
+// getproduct_fornewcustomer()
+// {
+//     License.lpid.addEventListener("change", (e) => {
+//         var id = parseInt(e.currentTarget.value)
+//         FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/GetListOfLicenseTypes?prodId=${id}`).then((d) => {
+//           licensetypeid.innerHTML = ""
+//           licensetypeid.innerHTML = `<option>Select Type</option>`
+//             d.forEach(e => {
+//               licensetypeid.innerHTML += `<option value="${e.enumId}">${e.name}</option>`  //id2
+//             });
+//         })
+//     })
+
+// }
+
+
+
+}
+
+
 
 // input.addEventListener("input", (data) => {
 //     //call api
