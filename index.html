@@ -4,10 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="JS/tailwind.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/datepicker.min.js"></script>
   <script></script>
-
-
 </head>  
 <body class="bg-gray-100">
   <div class="container mx-auto">
@@ -15,7 +12,7 @@
     <nav class="flex items-center justify-between p-4  border-b-2 border-black-300 bg-white">
        <img src="Images/fusion-logo.png" width="120px" height="120px" alt="Tab Fusion" class="img-responsive"></img>
         <h1 class="font-bold  font-mono text-2xl text-gray-700">License Manager</h1>
-        <button id="btn_logout" value="logout" onclick="License.Logout_LicenseKeydiv()" class="border-2 border-blue-300 py-2 px-4 rounded-full font-medium hover:border-blue-700 invisible">Logout</button> 
+        <button id="btn_logout" value="logout" onclick="License.logout_licenseKeydiv()" class="border-2 border-blue-300 py-2 px-4 rounded-full font-medium hover:border-blue-700 invisible">Logout</button> 
     </nav>
     <!--Login for License-->
 
@@ -67,7 +64,7 @@
             <form id="Liclogin">
                 <div class="grid grid-cols-[50%_50%] mb-2">
                     <h1 class="flex-col items-center text-2xl font-semibold font-mono text-gray-900 ">Generate new License</h1>
-                    <p id="Spidmsg" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded invisible" role="alert">
+                    <p id="Spidmsg" style="display:none;" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded" role="alert">
                     </p>
                 </div>
                     <!--Company Information-->
@@ -189,7 +186,7 @@
         <form id="existing_customer_div">
             <div class="grid grid-cols-[70%_30%]  gap-4  w-full mt-4"> 
                 <label id="customer_name" for="email" class="mb-4 text-xl font-semibold  font-mono text-gray-900"></label>
-                <p id="exSpidmsg" class="bg-red-100 text-sm border mr-4 text-red-700 px-2.5 py-2.5 rounded invisible" role="alert"></p>
+                <p id="exSpidmsg"  style="display:none" class="bg-red-100 text-sm border mr-4 text-red-700 px-2.5 py-2.5 rounded" role="alert"></p>
             </div>
             <div class="grid md:grid-cols-2 md:gap-6">
                 <div class="relative z-0 w-full mb-5">
@@ -252,9 +249,6 @@
 var api = "http://localhost:5001/";
 License = new Licensefuncs();
 
-// 
-
-
 License.prodid.addEventListener("change", (e) => {
         var id = parseInt(e.currentTarget.value)
         FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/GetListOfLicenseTypes?prodId=${id}`).then((d) => {
@@ -265,9 +259,6 @@ License.prodid.addEventListener("change", (e) => {
             });
         })
 })
-   
-    
-
 License.existing_prodid.addEventListener("change", (e) => {
     var id = parseInt(e.currentTarget.value)
     FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/GetListOfLicenseTypes?prodId=${id}`).then((d) => {
