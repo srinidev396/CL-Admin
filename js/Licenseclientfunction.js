@@ -1,3 +1,4 @@
+var currentFocus = -1;
 class Licensefuncs {
 constructor(){
    this.formlogin_div = document.getElementById("frmlogin_div");
@@ -35,7 +36,6 @@ constructor(){
 GetToken() {
     License.lpid.classList.add("invisible");
     License.search_client_input.value = "";
-    License.btn_logout.classList.remove("invisible");
     var prop = document.getElementById("frmlogin");
     var url = `${app.LicenseServiceUrl}GenerateToken?`;
     var userName = prop[0].value;
@@ -57,7 +57,7 @@ GetToken() {
         // License.search_client.classList.remove("invisible");
         sessionStorage.setItem("token", data);
         FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/GetListOfProducts`).then((d) => {
-           
+           License.btn_logout.classList.remove("invisible");
             License.existing_prodid.innerHTML = ""
             License.existing_prodid.innerHTML = `<option value="0">Select Product</option>`
             License.prodid.innerHTML = ""
@@ -68,12 +68,20 @@ GetToken() {
             });
         })
     }).catch((err => {
+      License.btn_logout.classList.add("invisible");
+       if(err.message.includes("Failed"))
+       {
+        License.lpid.classList.remove("invisible");
+        License.lpid.innerHTML = "License Server is not running. Please check it !";
+       }
+       else{ 
         License.lpid.classList.remove("invisible");
         License.lpid.innerHTML = err;
         License.lpid.style.color = 'red';
+      }
     }))
 }
-// License should  not be gnerated again from same Company.
+
 // If token expired,  throw message for users
 // if it is 401, kick them out
 // CLear everything
@@ -83,8 +91,8 @@ GetToken() {
 // after search, if found , After finishe typing , When search, if customer exist so you open exiting , if customer does not exit 
 //  Check again customer name, for Generate new License, 
 // Cancel go back to search bar. 
-// FOr exiting, remove search bar
-//Cancel
+// FOr existing, remove search bar
+//Check if License server is down or not
 
 GenerateNewLicense() {
     License.Spidmsg.style.display= 'none';
@@ -98,7 +106,6 @@ FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/IsCustomerExist?Customern
         // License.Spidmsg.classList.remove("invisible");
         License.Spidmsg.style.display= 'block';
         License.Spidmsg.innerHTML = d.message;
-        License.Spidmsg.style.color = 'red';
         return
   }
   else if(d.isError)
@@ -106,7 +113,6 @@ FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/IsCustomerExist?Customern
     // License.Spidmsg.classList.remove("invisible");
     License.Spidmsg.style.display = 'block';
     License.Spidmsg.innerHTML = d.message;
-    License.Spidmsg.style.color = 'red';
     return
   }
   else{
@@ -139,10 +145,7 @@ FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/IsCustomerExist?Customern
               License.lpid.classList.remove("invisible");
               License.lpid.style.color = 'red';
               errorMessages(License.lpid, key.status);
-            
-            
             }
-           
             return;
         }
         License.key_div.classList.remove("invisible");
@@ -172,9 +175,6 @@ close_customerinfodiv()
 
 close_LicenseKeydiv()
 {  
-    // sessionStorage.removeItem("token");
-    // License.clear_LicenseInfo(prop);
-    // License.Spidmsg.classList.add("invisible"); 
     License.Spidmsg.style.display= 'none';
     License.liclogin_div.style.display ="none";
     var prop = License.Liclogin;
@@ -193,9 +193,9 @@ logout_licenseKeydiv()
     License.key_div.classList.add("invisible");
     License.existing_client.style.display = "none";
     License.Spidmsg.style.display = "none";
+    License.exkey_div.classList.add("invisible");
     License.exSpidmsg.style.display = "none";
     License.formlogin_div.style.display = "block"; 
-    
 }
 
 clear_LicenseInfo(prop)
@@ -223,8 +223,8 @@ clientList_autocomplete(inp){
     inp.addEventListener("input" , (e)=>{
         var key =  inp.value.trim().toLowerCase();
         License.closeAllLists();
+        currentFocus = -1;
         if (!key){return false;}
-        let currentFocus = -1;
         if(key.length>2){ 
           FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/CustomerAutocomplete?key=${key}`).then((d) => {
           if(!d.isError){
@@ -236,7 +236,6 @@ clientList_autocomplete(inp){
              {
                if(d.listofName[i].toLowerCase().includes(key))
                {
-               
                  //DIV for each matching element: 
                  let b = document.createElement("DIV");
                  b.setAttribute("class", " border border-1 px-2  py-2 cursor-pointer hover:bg-slate-200")
@@ -252,42 +251,18 @@ clientList_autocomplete(inp){
                   License.closeAllLists();
                      });
              a.appendChild(b);
-           
             }
 
            }
         }
     }).catch((err => {
-        
         License.lpid.classList.remove("invisible");
         License.lpid.innerHTML = err;
         License.lpid.style.color = 'red';
     }))
   }     
      // When users presses a key on the keyboard:
-  inp.addEventListener("keydown", function(e) {
-      var x = document.getElementById("search_client_inputautocomplete-list")
-      if (x) x = x.getElementsByTagName("div");
-      if (e.keyCode == 40) {
-        // if arrow Down key is pressed
-        currentFocus++;
-        // make the current item more visible
-        License.addActive(x);
-      } else if (e.keyCode == 38) { 
-        // decrease the focus 
-        currentFocus--;
-     
-        License.addActive(x);
-      } else if (e.keyCode == 13) {
-       
-        e.preventDefault();
-        if (currentFocus > -1) {
-    
-          if (x) x[currentFocus].click();
-        }
-      }
-     
-  });
+ 
   
   /*execute a function when someone clicks in the document:*/
   //  document.addEventListener("click", function (e) {
@@ -329,22 +304,22 @@ closeAllLists(elmnt) {
   License.lpid.classList.add("invisible");
 }
 
+
 generate_new_license_existingcompany()
 {
   License.exSpidmsg.style.display ="none";
   var companyname = License.search_client_input.value.trim();
- 
   var prop  = License.existing_customer_div;
   var model = {};
-  model.address = 'myaddress';
-  model.city = 'city';
-  model.stateProvice = 'myprovince';
-  model.country = 'country';
-  model.zipCode = '60100';
-  model.contactTitle = 'contactTitle';
-  model.contactPhone = '7894565';
-  model.contactFullName = 'ycontact';
-  model.contactEmail = 'my@gmail.com';
+  model.address = 'Required';
+  model.city = 'Required';
+  model.stateProvice = 'Required';
+  model.country = 'Required';
+  model.zipCode = 'Required';
+  model.contactTitle = 'Required';
+  model.contactPhone = 'Required';
+  model.contactFullName = 'Required';
+  model.contactEmail = 'Required';
   model.productName = 'Required';
   model.licenseType = 'Required'
   model.companyName = companyname;
@@ -412,28 +387,22 @@ var License = new Licensefuncs();
     let customer_name = License.search_client_input.value.trim();
     if(customer_name == "" || customer_name == null)
     {
-
       License.lpid.classList.remove("invisible");
       License.lpid.innerHTML = "Please enter company name.";
-      License.lpid.style.color = 'red';
       return;
     }
     FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/IsCustomerExist?Customername=${customer_name}`).then((d) => {
     if(d.isCustomerFound){ 
         let customer  = d.customerName;
         License.existing_client.style.display ="none";
-        // License.existing_client.style.top ="130px";
-        // License.customer_name.innerHTML  = customer;
         License.search_client.style.display = "none";
-        License.customer_name.innerHTML ='License generate for' +" "+customer;
+        License.customer_name.innerHTML ='Generate License for' +" "+customer;
         License.existing_client.style.display = "block";
     }
-    
     else if(d.isError)
     {
       License.lpid.classList.remove("invisible");
       License.lpid.innerHTML = d.message;
-      License.lpid.style.color = 'red';
       return;
     }
     else{
@@ -446,4 +415,26 @@ var License = new Licensefuncs();
     });
   
   }); 
+  License.search_client_input.addEventListener("keydown", function(e) {
+    var x = document.getElementById("search_client_inputautocomplete-list")
+    if (x) x = x.getElementsByTagName("div");
+    if (e.keyCode == 40) {
+      // if arrow Down key is pressed
+      currentFocus++;
+      // make the current item more visible
+      License.addActive(x);
+    } else if (e.keyCode == 38) { 
+      // decrease the focus 
+      currentFocus--;
+   
+      License.addActive(x);
+    } else if (e.keyCode == 13) {
+     
+      e.preventDefault();
+      if (currentFocus > -1) {
   
+        if (x) x[currentFocus].click();
+      }
+    }
+   
+});

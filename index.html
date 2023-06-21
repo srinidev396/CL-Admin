@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+  .autocomplete-active {
+  background-color: rgb(18, 99, 230) !important; 
+  color: #ffffff; 
+}
+</style>
   <script src="JS/tailwind.js"></script>
   <script></script>
 </head>  
@@ -12,11 +18,9 @@
     <nav class="flex items-center justify-between p-4  border-b-2 border-black-300 bg-white">
        <img src="Images/fusion-logo.png" width="120px" height="120px" alt="Tab Fusion" class="img-responsive"></img>
         <h1 class="font-bold  font-mono text-2xl text-gray-700">License Manager</h1>
-        <button id="btn_logout" value="logout" onclick="License.logout_licenseKeydiv()" class="border-2 border-blue-300 py-2 px-4 rounded-full font-medium hover:border-blue-700 invisible">Logout</button> 
+        <p id="btn_logout" value="logout" onclick="License.logout_licenseKeydiv()" class="border-2 cursor-pointer border-blue-300 py-2 px-4 rounded-full font-medium hover:border-blue-700 invisible">Logout</p> 
     </nav>
     <!--Login for License-->
-
-    
     <div id="my_div" class="overflow-auto items-center relative flex flex-col h-screen bg-white shadow-md">
         <!---Error Message for login-->
          <div id="Lpid" class="bg-red-100  mt-5 border border-red-400 text-red-700 px-4 py-3 rounded invisible" role="alert">
@@ -24,19 +28,18 @@
         <!---Search bar for Client or Look for existing client-->
        
             <form autocomplete="off">  
-                <div  id="search_client" style="display: none;"  class="rounded-lg  top-32  w-[825px] px-6 py-6 lg:px-8">
+                <div  id="search_client" style="display: none;" class="rounded-lg  top-32 lg:w-[825px] sm:w-[500px] md:w-[700px] px-6 py-6 lg:px-8">
                 <!-- <label for="search_client" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label> -->
                 <div class="relative">
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
                     <input type="search" id="search_client_input" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Search to add new License for new or existing company" required>
-                    <p id="client_search_button"  type="sub" class="cursor-pointer text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">Search</p>
+                    <p id="client_search_button"  type="submit" class="cursor-pointer text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">Search</p>
                 </div>
             </div>
             </form>
             
-        
         <!--Form login-->
          <div id="frmlogin_div" class="relative rounded-lg mt-4 border border-2 w-2/6 shadow px-6 py-6 lg:px-8">
                 <form id="frmlogin" class="space-y-6" action="">
@@ -186,22 +189,19 @@
         <form id="existing_customer_div">
             <div class="grid grid-cols-[70%_30%]  gap-4  w-full mt-4"> 
                 <label id="customer_name" for="email" class="mb-4 text-xl font-semibold  font-mono text-gray-900"></label>
-                <p id="exSpidmsg"  style="display:none" class="bg-red-100 text-sm border mr-4 text-red-700 px-2.5 py-2.5 rounded" role="alert"></p>
+                <p id="exSpidmsg"  style="display:none" class="bg-red-100 mr-3 text-sm border border-red-400 text-red-700  rounded px-2.5 py-2.5 rounded"></p>
             </div>
             <div class="grid md:grid-cols-2 md:gap-6">
                 <div class="relative z-0 w-full mb-5">
                     <select value=""  id="existing_prodid" name="productName" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                         <option value="0">Select Product</option>
                     </select>
-                    <!-- <label for="select" class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Product</label> -->
-                   
                   </div>
             
                   <div class="relative z-0 w-full mb-5">
                     <select value=""  id="existing_licensetypeid" name="licenseType" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                         <option>Select Type</option>
                     </select>
-                    <!-- <label for="select" class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">LicenseType</label> -->
                   </div>
             </div>
             <div class="grid md:grid-cols-2 md:gap-6">
@@ -229,18 +229,13 @@
                 <button id="close-btn" onclick="License.close_customerinfodiv()" value="cancel" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-3 py-3 hover:text-gray-900 focus:z-10">Cancel</button>
         </div>
         <div id="exkey_div" class="grid md:grid-cols-1 md:gap-6 bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-2 invisible mt-4">
-            
             <p class="font-bold">Your's License Key</p>
              <p id="exLspid" class="text-sm overflow: auto; break-words"></p>
-            <!-- <p id="Lspid" style="color: blue; overflow: auto;"></p> -->
        </div>
              </form>
       </div>
-      
     </div>
-   
     </div>
-
 </body>
 </html>
 <script src="js/Networking.js"></script>
@@ -248,7 +243,6 @@
 <script>
 var api = "http://localhost:5001/";
 License = new Licensefuncs();
-
 License.prodid.addEventListener("change", (e) => {
         var id = parseInt(e.currentTarget.value)
         FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/GetListOfLicenseTypes?prodId=${id}`).then((d) => {
@@ -269,155 +263,5 @@ License.existing_prodid.addEventListener("change", (e) => {
         });
     })
 })
-
 License.clientList_autocomplete(License.search_client_input); 
-
-
-// License.verify_existing_customer(License.client_search_button);
-   
-
-
-// function generate_license_existing_customer(customer){
-//     FETCHPOSTAUTH(`${app.LicenseServiceUrl}LicenseGenerator/GenerateLicenseToExistCustomer`, customer).then((d) => {
-//     alert(d.message)
-    
-// });
-
-// }
-    //var api = "https://license.tabfusionrms.com/";
-    // k.addEventListener('click', (e) =>{
-    //     document.getElementById("frmlogin").classList.add("invisible");
-    //     document.getElementById("generate_license").classList.remove("invisible");
-
-    // } );
-    // function GetToken() {
-    //     document.getElementById("frmlogin_div").classList.add("invisible");
-    //     document.getElementById("liclogin_div").classList.remove("invisible");
-    //     var prop = document.getElementById("frmlogin");
-    //     var url = `${api}GenerateToken?`;
-    //     var userName = prop[0].value;
-    //     var password = prop[1].value;
-    //     var database = prop[2].value;
-    //     var sendurl = `${url}userName=${userName}&passWord=${password}&database=${database}`
-    //     FETCHGET(sendurl, "html").then((data) => {
-    //         document.getElementById("Lpid").innerHTML = data;
-    //         sessionStorage.setItem("token", data);
-    //         FETCHGETAUTH(`${api}LicenseGenerator/GetListOfProducts`).then((d) => {
-    //             document.getElementById("prodid").innerHTML = ""
-    //             document.getElementById("prodid").innerHTML = `<option value="0">Select Product</option>`
-    //             d.forEach(e => {
-    //                 document.getElementById("prodid").innerHTML += `<option value="${e.id}">${e.name}</option>`
-    //             });
-    //         })
-    //     }).catch((err => {
-    //         document.getElementById("Lpid").classList.remove("invisible");
-    //         document.getElementById("Lpid").value = err;
-    //         document.getElementById("Lpid").style.color = 'red';
-    //     }))
-    // }
-    // function GenerateNewLicense() {
-    //     var prop = document.getElementById("Liclogin");
-    //     var model = {};
-    //     model.companyName = prop[0].value;
-    //     model.address = prop[1].value;
-    //     model.city = prop[2].value;
-    //     model.stateProvice = prop[3].value;
-    //     model.country = prop[4].value;
-    //     model.zipCode = prop[5].value;
-    //     model.contactTitle = prop[6].value;
-    //     model.contactPhone = prop[7].value;
-    //     model.contactFullName = prop[8].value;
-    //     model.contactEmail = prop[9].value;
-    //     model.ProductId = prop[10].value;
-    //     model.LicenseTypeEnumid = prop[11].value;
-    //     model.licenseCount = prop[12].value;
-    //     model.expiryDate = prop[13].value;
-    //     model.database = prop[14].value;
-    //     model.comment = prop[15].value;
-
-    //     var url = `${api}LicenseGenerator/GenerateLicense`
-    //     FETCHPOSTRETURNSTRING(url, model).then((key) => {
-    //         if (key.ok == false) {
-    //             errorMessages(document.getElementById("Lspid"), key.status);
-    //             return;
-    //         }
-            
-    //         document.getElementById("Lspid").innerHTML =  `<p>${key}</p>`;
-    //         document.getElementById("Lspid").style.color = 'blue'
-    //     }).catch((err) => {
-    //         document.getElementById("Lspid").innerHTML = err;
-    //         document.getElementById("Lspid").style.color = 'red'
-    //     });
-    // }
-
-    // function ValidateLicense() {
-    //     var data = {};
-    //     var prop = document.getElementById("frmslim");
-    //     data.Database = prop[0].value;
-    //     data.SqlServer = prop[1].value;
-    //     data.LicenseKey = prop[2].value;
-    //     data.ActiveCount = parseInt(prop[3].value);
-    //     var url = `${api}LicenseGenerator/LicenseValidation`;
-    //     FETCHPOSTAUTH(url, data).then((d) => {
-    //         if (d.ok == false) {
-    //             errorMessages(document.getElementById("Spidmsg"), d.status);
-    //             return;
-    //         }
-    //         if (d.valid) {
-    //             var dateFormat = new Date(d.expiryDate);
-    //             document.getElementsByName("rvalid")[0].innerHTML = d.companyName;
-    //             // document.getElementsByName("rvalid")[1].innerHTML = d.licenseType;
-    //             document.getElementsByName("rvalid")[1].innerHTML = d.sqlServer;
-    //             document.getElementsByName("rvalid")[2].innerHTML = d.database;
-    //             document.getElementsByName("rvalid")[3].innerHTML = d.licenseKey;
-    //             document.getElementsByName("rvalid")[4].innerHTML = dateFormat;
-    //             document.getElementsByName("rvalid")[5].innerHTML = d.licenseCount;
-    //             document.getElementsByName("rvalid")[6].innerHTML = d.productName;
-
-    //             document.getElementsByName("rvalid")[7].innerHTML = d.licenseType;
-    //             document.getElementsByName("rvalid")[8].innerHTML = d.features.fLabelBlackwhite;
-    //             document.getElementsByName("rvalid")[9].innerHTML = d.features.fTabQuick;
-    //             document.getElementsByName("rvalid")[10].innerHTML = d.features.fTransfer;
-    //             document.getElementsByName("rvalid")[11].innerHTML = d.features.fRequest;
-    //             document.getElementsByName("rvalid")[12].innerHTML = d.features.fAttachment;
-    //             document.getElementsByName("rvalid")[13].innerHTML = d.features.fRetention;
-    //             document.getElementsByName("rvalid")[14].innerHTML = d.features.fDashboard;
-
-    //             document.getElementById("Spidmsg").innerHTML = `${d.message}`
-    //             document.getElementById("Spidmsg").style.color = "green";
-    //         } else {
-    //             document.getElementById("Spidmsg").innerHTML = d.message;
-    //             document.getElementById("Spidmsg").style.color = "red";
-    //         }
-
-    //     }).catch((err, xer, xxr) => {
-    //         document.getElementById("Spidmsg").innerHTML = err;
-    //         document.getElementById("Spidmsg").style.color = "red";
-    //     });
-    // }
-
-    //events
-    
-    // var counter = 1;
-    // function Fillupform() {
-    //     var num = counter++;
-    //     var prop = document.getElementById("Liclogin");
-    //     var model = {};
-    //     prop[0].value = `companyName${num}`;
-    //     prop[1].value = `address${num}`;
-    //     prop[2].value = `city${num}`;
-    //     prop[3].value = `state${num}`;
-    //     prop[4].value = `country${num}`
-    //     prop[5].value = `zipcode${num}`
-    //     prop[6].value = `manager${num}`
-    //     prop[7].value = `55544433${num}`
-    //     prop[8].value = `name${num}`
-    //     prop[9].value = `test${num}@email.com`
-    //     prop[12].value = 10
-    //     prop[13].value = "2024-03-29T21:24";
-    //     prop[14].value = `database${num}`
-    //     prop[15].value = `comment${num}`
-    // }
-
-
 </script>
