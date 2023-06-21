@@ -105,7 +105,7 @@ FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/IsCustomerExist?Customern
       if(d.isCustomerFound){ 
         // License.Spidmsg.classList.remove("invisible");
         License.Spidmsg.style.display= 'block';
-        License.Spidmsg.innerHTML = d.message;
+        License.Spidmsg.innerText = "This Company Name already exist !";
         return
   }
   else if(d.isError)
