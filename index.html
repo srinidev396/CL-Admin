@@ -42,7 +42,7 @@
             
         <!--Form login-->
          <div id="frmlogin_div" class="relative rounded-lg mt-4 border border-2 w-2/6 shadow px-6 py-6 lg:px-8">
-                <form id="frmlogin" class="space-y-6" action="">
+                <form id="frmlogin" class="space-y-6" autocomplete="off">
                     <div>
                         <label  class="block mb-2 text-lg font-mono  text-gray-900">User Name:</label>
                         <input type="text" name="username" placeholder="userName" value="administrator" class="focus:outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
@@ -64,7 +64,7 @@
         </div>
        <!--Generate License-->
         <div id="liclogin_div" style="display:none;" class="w-6/12 border-2 flex flex-col grow mt-6 bg-white rounded-lg absolute left-68 p-4">
-            <form id="Liclogin">
+            <form id="Liclogin" autocomplete="off">
                 <div class="grid grid-cols-[50%_50%] mb-2">
                     <h1 class="flex-col items-center text-2xl font-semibold font-mono text-gray-900 ">Generate new License</h1>
                     <p id="Spidmsg" style="display:none;" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded" role="alert">
@@ -186,7 +186,7 @@
         </div>
    <!--Existing  client with License details-->
       <div id="existing_client" style="display:none;" class="w-6/12 border-2 flex flex-col grow mt-6 bg-white rounded-lg absolute left-68 p-4" >
-        <form id="existing_customer_div">
+        <form id="existing_customer_div" autocomplete="off">
             <div class="grid grid-cols-[70%_30%]  gap-4  w-full mt-4"> 
                 <label id="customer_name" for="email" class="mb-4 text-xl font-semibold  font-mono text-gray-900"></label>
                 <p id="exSpidmsg"  style="display:none" class="bg-red-100 mr-3 text-sm border border-red-400 text-red-700  rounded px-2.5 py-2.5 rounded"></p>
