@@ -1,4 +1,5 @@
 var currentFocus = -1;
+var customer_id;
 class Licensefuncs {
 constructor(){
    this.formlogin_div = document.getElementById("frmlogin_div");
@@ -100,22 +101,23 @@ GenerateNewLicense() {
     var prop = License.Liclogin;
     var model = {};
     var customer_name = prop[0].value;
+    if (customer_name.length != 0){ 
     // if companyName exist or not
-FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/IsCustomerExist?Customername=${customer_name}`).then((d) => {
+     FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/IsCustomerExist?Customername=${customer_name}`).then((d) => {
       if(d.isCustomerFound){ 
         // License.Spidmsg.classList.remove("invisible");
         License.Spidmsg.style.display= 'block';
-        License.Spidmsg.innerText = "This Company Name already exist !";
+        License.Spidmsg.innerText = "Company Name already exist !";
         return
-  }
-  else if(d.isError)
-  {
+      }
+       else if(d.isError)
+     {
     // License.Spidmsg.classList.remove("invisible");
-    License.Spidmsg.style.display = 'block';
-    License.Spidmsg.innerHTML = d.message;
-    return
-  }
-  else{
+        License.Spidmsg.style.display = 'block';
+        License.Spidmsg.innerHTML = d.message;
+        return
+      }
+     else{
     model.companyName  = prop[0].value;
     model.address = prop[1].value;
     model.city = prop[2].value;
@@ -161,6 +163,13 @@ FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/IsCustomerExist?Customern
 
   }
   });  
+}
+else{
+ 
+  License.Spidmsg.style.display= 'block';
+  License.Spidmsg.innerText = "Fields are empty !";
+
+}
 }
 close_customerinfodiv()
 {
@@ -322,6 +331,7 @@ generate_new_license_existingcompany()
   model.contactEmail = 'Required';
   model.productName = 'Required';
   model.licenseType = 'Required'
+  model.customerId = 
   model.companyName = companyname;
   model.ProductId = prop[0].value;
   model.LicenseTypeEnumid = prop[1].value;
@@ -329,6 +339,7 @@ generate_new_license_existingcompany()
   model.expiryDate =  prop[3].value;
   model.database =  prop[4].value;
   model.comment =  prop[5].value;
+  model.customerId = customer_id;
   var url = `${app.LicenseServiceUrl}LicenseGenerator/GenerateLicenseToExistCustomer`
   FETCHPOSTAUTH(url, model).then((key) => {
     if (key.ok == false) {
@@ -393,6 +404,7 @@ var License = new Licensefuncs();
     }
     FETCHGETAUTH(`${app.LicenseServiceUrl}LicenseGenerator/IsCustomerExist?Customername=${customer_name}`).then((d) => {
     if(d.isCustomerFound){ 
+        customer_id  = d.customerId;
         let customer  = d.customerName;
         License.existing_client.style.display ="none";
         License.search_client.style.display = "none";

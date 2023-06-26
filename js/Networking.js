@@ -1,5 +1,5 @@
 var app = {
-    LicenseServiceUrl:"http://localhost:5001/"
+    LicenseServiceUrl:"http://localhost:3333/"
 }
 var apierror = "";
 async function FETCHGET(url, requestData) {
