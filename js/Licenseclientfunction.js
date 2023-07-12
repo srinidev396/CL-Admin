@@ -265,6 +265,12 @@ clientList_autocomplete(inp){
            }
         }
     }).catch((err => {
+       if (err == "SyntaxError: Unexpected end of JSON input")
+       {
+        License.lpid.style.display ="none";
+        License.logout_licenseKeydiv();
+         
+       }
         License.lpid.classList.remove("invisible");
         License.lpid.innerHTML = err;
         License.lpid.style.color = 'red';
