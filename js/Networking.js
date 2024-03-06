@@ -1,5 +1,5 @@
 var app = {
-    LicenseServiceUrl:"http://localhost:3333/"
+    LicenseServiceUrl: "http://localhost:5001/"
 }
 var apierror = "";
 async function FETCHGET(url, requestData) {
@@ -14,32 +14,43 @@ async function FETCHGET(url, requestData) {
 }
 
 async function FETCHGETAUTH(url) {
-    var rdata = ""
     var token = `Bearer ${sessionStorage.getItem("token")}`
-    const call = await fetch(url, {
+    var response = "";
+    response = await fetch(url, {
         method: 'GET',
         headers: {
             'Authorization': token,
         }
-    }).then(respose => respose.json())
-    var xx = call;
-    return call;
+    });
+    if (response.ok == false) {
+        if (response.status == 401) {
+            alert(`${response.statusText}: The token is expired, please login again!`);
+            location.reload();
+        }
+    } else {
+        return response.json();
+    }
 }
 
 
 async function FETCHPOSTAUTH(url = '', data = {}) {
     var token = `Bearer ${sessionStorage.getItem("token")}`
-    const response = await fetch(url, {
+    var response = "";
+    response = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': token,
         },
         body: JSON.stringify(data)
-    })
-    if(response.ok == false){
-        return response;
-    }else {
+    });
+
+    if (response.ok == false) {
+        if (response.status == 401) {
+            alert(`${response.statusText}: The token is expired, please login again!`);
+            location.reload();
+        }
+    } else {
         return response.json();
     }
 }
@@ -54,30 +65,13 @@ async function FETCHPOSTRETURNSTRING(url = '', data = {}) {
         },
         body: JSON.stringify(data)
     })
-    
-    if(response.ok == false){
+
+    if (response.ok == false) {
         return response;
-    }else{
+    } else {
         return response.text();
     }
 }
-
-
-function errorMessages(elem, errornumber){
-  switch (errornumber) {
-    case 401:
-        elem.innerHTML = `Not Authorized 401`;
-        elem.style.color = "red"; 
-        break;
-    case 400:
-        elem.innerHTML = `Bad request, some fiedls are empty`;
-        elem.style.color = "red"; 
-    default:
-        break;
-  }
-}
-
-
 
 async function FETCHPOSTNOAUTH(url = '', data = {}) {
     var token = `Bearer ${sessionStorage.getItem("token")}`
@@ -89,9 +83,9 @@ async function FETCHPOSTNOAUTH(url = '', data = {}) {
         },
         body: JSON.stringify(data)
     })
-    if(response.ok == false){
+    if (response.ok == false) {
         return response;
-    }else {
+    } else {
         return response.json();
     }
 }
@@ -105,4 +99,6 @@ function showSpinner() {
 function hideSpinner() {
     document.getElementById("spinner").style.display = "none";
 }
+
+
 
