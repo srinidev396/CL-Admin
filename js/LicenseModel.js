@@ -216,7 +216,7 @@ function NewlicenseFormHtml() {
                 </div>
                 <div class="form-group">
                     <label for="sqlpassword">Sql Password</label>
-                    <input type="text" id="sqlpassword" name="sqlpassword">
+                    <input type="password" id="sqlpassword" name="sqlpassword">
                 </div>
                 <div class="form-group">
                     <label for="databasename">Database Name</label>
@@ -269,7 +269,7 @@ function ExistLicenseFormHtml() {
     </div>
     <div class="form-group">
         <label for="sqlpassword">Sql Password</label>
-        <input type="text" id="sqlpassword" name="sqlpassword">
+        <input type="password" id="sqlpassword" name="sqlpassword">
     </div>
     <div class="form-group">
         <label for="databasename">Database Name</label>
